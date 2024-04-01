@@ -1,14 +1,14 @@
-const { sanitizeString } = require('./sanitization');
-const { convertCase } = require('./caseConversion');
-const { customizeSeparator } = require('./separatorCustomization');
-const { normalizeSlug } = require('./normalization');
-const { truncateSlug } = require('./truncation');
-const { ensureUniqueSlug } = require('./uniqueness');
-const { isValidSlug } = require('./validation');
+const { sanitizeString } = require('./sanitization')
+const { convertCase } = require('./caseConversion')
+const { customizeSeparator } = require('./separatorCustomization')
+const { normalizeSlug } = require('./normalization')
+const { truncateSlug } = require('./truncation')
+const { ensureUniqueSlug } = require('./uniqueness')
+const { isValidSlug } = require('./validation')
 
 /**
  * Generates a URL-friendly slug from a given string.
- * 
+ *
  * @param {string} input - The input string to generate a slug from.
  * @param {object} options - Configuration options for generating the slug. Options include:
  * - separator: The character to use as a separator in the slug.
@@ -19,42 +19,42 @@ const { isValidSlug } = require('./validation');
  * - existingSlugs: An array of existing slugs to check against for uniqueness.
  * @returns {string} - The generated slug.
  */
-function generateSlug(input, options = {}) {
-  let slug = input;
+function generateSlug (input, options = {}) {
+  let slug = input
 
   // Sanitize the string
-  slug = sanitizeString(slug, options);
+  slug = sanitizeString(slug, options)
 
   // Convert case
-  slug = convertCase(slug, options);
+  slug = convertCase(slug, options)
 
   // Customize separator
-  slug = customizeSeparator(slug, options);
+  slug = customizeSeparator(slug, options)
 
   // Normalize the slug
-  slug = normalizeSlug(slug, options.separator);
+  slug = normalizeSlug(slug, options.separator)
 
   // Truncate the slug if maxLength is specified
   if (options.maxLength) {
-    slug = truncateSlug(slug, options.maxLength, options.preserveWords, options.separator);
+    slug = truncateSlug(slug, options.maxLength, options.preserveWords, options.separator)
   }
 
   // Ensure slug uniqueness if required
   if (options.ensureUnique && typeof options.ensureUnique === 'function') {
     // The ensureUnique option should be a function that accepts the slug and options, and returns a unique slug.
     // This function needs to be provided by the caller and should handle the logic for checking against existing slugs.
-    slug = options.ensureUnique(slug, options.existingSlugs || [], options.separator);
+    slug = options.ensureUnique(slug, options.existingSlugs || [], options.separator)
   } else if (options.existingSlugs) {
     // If a custom ensureUnique function is not provided but existingSlugs are, use the default uniqueness function
-    slug = ensureUniqueSlug(slug, options.existingSlugs, options.separator);
+    slug = ensureUniqueSlug(slug, options.existingSlugs, options.separator)
   }
 
   // Validate the final slug
   if (!isValidSlug(slug)) {
-    throw new Error('The generated slug is invalid.');
+    throw new Error('The generated slug is invalid.')
   }
 
-  return slug;
+  return slug
 }
 
-module.exports = { generateSlug };
+module.exports = { generateSlug }
